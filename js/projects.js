@@ -120,7 +120,7 @@ const MANUAL_PROJECTS = [
         : "";
 
     const openTag = p.url
-      ? `<a href="${p.url}" target="_blank" rel="noopener"`
+      ? `<a href="${p.url}" target="_blank" rel="noopener" data-cursor="link" data-cursor-text="Öffnen ↗"`
       : `<div`;
     const closeTag = p.url ? "</a>" : "</div>";
 

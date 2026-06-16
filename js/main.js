@@ -104,14 +104,37 @@
     }
     gsap.set(".hero-headline .word", { yPercent: 110 });
     gsap.set([".hero-eyebrow", ".hero-sub", ".hero-actions"], { y: 24, opacity: 0 });
-    gsap.set(".hero-scroll", { opacity: 0 });
+    gsap.set([".hero-scroll", ".hero-top", ".hero-bottom"], { opacity: 0 });
 
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-    tl.to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.8 })
+    tl.to(".hero-top", { opacity: 1, duration: 0.8 })
+      .to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
       .to(".hero-headline .word", { yPercent: 0, duration: 1.1, stagger: 0.12 }, "-=0.4")
       .to(".hero-sub", { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
       .to(".hero-actions", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
-      .to(".hero-scroll", { opacity: 1, duration: 0.6 }, "-=0.3");
+      .to([".hero-scroll", ".hero-bottom"], { opacity: 1, duration: 0.6 }, "-=0.3");
+  }
+
+  /* ============================================================
+     3b) HEADLINE-MASKEN-REVEAL  [data-reveal-title]
+     ============================================================ */
+  function initTitleReveals() {
+    const titles = gsap.utils.toArray("[data-reveal-title]");
+    titles.forEach((t) => {
+      const inner = document.createElement("span");
+      inner.className = "title-inner";
+      while (t.firstChild) inner.appendChild(t.firstChild);
+      t.appendChild(inner);
+      t.classList.add("title-mask");
+      if (reduced) return;
+      gsap.set(inner, { yPercent: 120 });
+      ScrollTrigger.create({
+        trigger: t,
+        start: "top 88%",
+        onEnter: () =>
+          gsap.to(inner, { yPercent: 0, duration: 1.15, ease: "expo.out" }),
+      });
+    });
   }
 
   /* ============================================================
@@ -190,9 +213,19 @@
     }
     requestAnimationFrame(ring_loop);
 
-    document.querySelectorAll('a, button, [data-cursor="link"]').forEach((el) => {
-      el.addEventListener("mouseenter", () => document.documentElement.classList.add("cursor-hover"));
-      el.addEventListener("mouseleave", () => document.documentElement.classList.remove("cursor-hover"));
+    // Delegation (funktioniert auch für dynamisch eingefügte Karten)
+    const root = document.documentElement;
+    const labelEl = document.getElementById("cursor-label");
+    document.addEventListener("mouseover", (e) => {
+      const labeled = e.target.closest("[data-cursor-text]");
+      const link = e.target.closest('a, button, [data-cursor="link"]');
+      root.classList.toggle("cursor-hover", !!(labeled || link));
+      if (labeled) {
+        if (labelEl) labelEl.textContent = labeled.getAttribute("data-cursor-text");
+        root.classList.add("cursor-labeled");
+      } else {
+        root.classList.remove("cursor-labeled");
+      }
     });
   }
 
@@ -244,6 +277,7 @@
     initMarquee();
     initNav();
     if (hasGSAP && typeof ScrollTrigger !== "undefined") {
+      initTitleReveals();
       initReveals();
       initParallax();
     }

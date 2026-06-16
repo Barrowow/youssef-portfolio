@@ -152,20 +152,48 @@ body {
   filter: blur(20px);
 }
 
-/* Scroll-Indicator: sanftes Auf/Ab */
+/* Hero: obere/untere Meta-Zeilen */
+.hero-top,
+.hero-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 242, 0.45);
+}
+.hero-top__item {
+  display: inline-flex;
+  align-items: center;
+}
+.hero-main { flex: 0 0 auto; }
+@media (max-width: 600px) {
+  .hero-top__coords,
+  .hero-bottom__note { display: none; }
+}
+
+/* Scroll-Indicator: sanftes Auf/Ab (nur Transform, keine Opacity) */
 .hero-scroll {
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 242, 0.5);
   animation: floatY 2.4s ease-in-out infinite;
 }
 @keyframes floatY {
-  0%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
-  50%      { transform: translate(-50%, 8px); opacity: 1; }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
 }
 
 /* ---- Initialzustand für GSAP-Reveal (verhindert FOUC) ---- */
 .hero-eyebrow,
 .hero-sub,
 .hero-actions,
-.hero-scroll {
+.hero-scroll,
+.hero-top,
+.hero-bottom {
   opacity: 0;
 }
 .hero-headline .word {
@@ -305,6 +333,31 @@ body {
   margin-left: -2.5px;
   margin-top: -2.5px;
 }
+/* Cursor-Label (z.B. "Öffnen ↗") */
+#cursor-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: #08090c;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.25s ease;
+}
+.cursor-labeled .cursor-ring {
+  width: 92px;
+  height: 92px;
+  margin-left: -46px;
+  margin-top: -46px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cursor-labeled #cursor-label { opacity: 1; }
+.cursor-labeled .cursor { opacity: 0; }
 
 /* ============================================================
    SCROLL-FORTSCHRITT
@@ -363,6 +416,16 @@ body {
   font-weight: 300;
   line-height: 1.65;
   color: rgba(233, 236, 242, 0.6);
+}
+
+/* Headline-Masken-Reveal */
+.title-mask {
+  overflow: hidden;
+  padding-bottom: 0.12em; /* Platz für Serif-Unterlängen */
+}
+.title-inner {
+  display: block;
+  will-change: transform;
 }
 
 /* ============================================================
@@ -943,7 +1006,9 @@ body {
   .hero-eyebrow,
   .hero-sub,
   .hero-actions,
-  .hero-scroll {
+  .hero-scroll,
+  .hero-top,
+  .hero-bottom {
     opacity: 1 !important;
   }
   .hero-headline .word {
