@@ -1,0 +1,59 @@
+{
+  "name": "Kontaktformular Website",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "contact",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "contact-form-webhook"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jose.fathi@gmail.com",
+        "toEmail": "jose.fathi@gmail.com",
+        "subject": "=Neue Kontaktanfrage von {{ $json.body.name }}",
+        "emailFormat": "text",
+        "text": "=Neue Nachricht über das Kontaktformular der Website:\n\nName:   {{ $json.body.name }}\nE-Mail: {{ $json.body.email }}\n\nNachricht:\n{{ $json.body.message }}",
+        "options": {
+          "replyTo": "={{ $json.body.email }}"
+        }
+      },
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "E-Mail senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [540, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"ok\": true, \"message\": \"empfangen\"}"
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Antwort an Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [820, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "E-Mail senden", "type": "main", "index": 0 }]]
+    },
+    "E-Mail senden": {
+      "main": [[{ "node": "Antwort an Website", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

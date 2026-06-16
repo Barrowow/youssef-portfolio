@@ -1,0 +1,611 @@
+/* ============================================================
+   Youssef Fathi — Portfolio
+   Base / Theme / Hero
+   ============================================================ */
+
+:root {
+  --ink: #08090c;
+  --accent: #5eead4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--ink);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* ---- Custom Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #08090c;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c2129;
+  border-radius: 9px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a313c;
+}
+
+/* ============================================================
+   Grain / Noise Overlay
+   ============================================================ */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   Navigation
+   ============================================================ */
+.nav-link {
+  position: relative;
+  transition: color 0.3s ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-link:hover {
+  color: #e9ecf2;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 120% at 50% 0%, #0e1016 0%, #08090c 55%, #050608 100%);
+}
+
+/* Canvas-Layout verbindlich per CSS (unabhängig von Tailwind-Timing) */
+#particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* Hero-Inhalt über dem Canvas */
+#hero > .hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Fluid, große Display-Headline */
+.hero-headline {
+  font-size: clamp(3.2rem, 13vw, 11rem);
+}
+.hero-headline .line {
+  display: block;
+  overflow: hidden;       /* Maskiert die Wörter für die Stagger-Reveal */
+}
+.hero-headline .word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Radialer Glow hinter der Headline */
+.hero-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(94, 234, 212, 0.12) 0%,
+    rgba(94, 234, 212, 0) 60%
+  );
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(20px);
+}
+
+/* Scroll-Indicator: sanftes Auf/Ab */
+.hero-scroll {
+  animation: floatY 2.4s ease-in-out infinite;
+}
+@keyframes floatY {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
+  50%      { transform: translate(-50%, 8px); opacity: 1; }
+}
+
+/* ---- Initialzustand für GSAP-Reveal (verhindert FOUC) ---- */
+.hero-eyebrow,
+.hero-sub,
+.hero-actions,
+.hero-scroll {
+  opacity: 0;
+}
+.hero-headline .word {
+  transform: translateY(110%);
+}
+
+/* ============================================================
+   WORK / Bento-Grid
+   ============================================================ */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 900px) {
+  .bento-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .bento-grid { grid-template-columns: 1fr; }
+}
+
+.bento-loading {
+  grid-column: 1 / -1;
+  padding: 4rem 1rem;
+  text-align: center;
+  color: rgba(233, 236, 242, 0.4);
+  font-size: 0.9rem;
+}
+.bento-loading code {
+  color: #5eead4;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+.bento-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 230px;
+  padding: 1.6rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(233, 236, 242, 0.08);
+  background: #0e1016;
+  overflow: hidden;
+  text-decoration: none;
+  color: #e9ecf2;
+  isolation: isolate;
+  transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bento-card--wide {
+  grid-column: span 2;
+}
+@media (max-width: 600px) {
+  .bento-card--wide { grid-column: span 1; }
+}
+
+/* Hintergrund-Layer, der beim Hover leicht zoomt */
+.bento-card__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--lang) 18%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, #11141b 0%, #0c0e13 100%);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  opacity: 0.85;
+}
+.bento-card:hover {
+  border-color: color-mix(in srgb, var(--lang) 50%, transparent);
+  transform: translateY(-4px);
+}
+.bento-card:hover .bento-card__bg {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+/* Live-Badge */
+.bento-card__live {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 242, 0.45);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.bento-card:hover .bento-card__live {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Privat-Badge: immer sichtbar, in Gold */
+.bento-card__live--private {
+  opacity: 1;
+  transform: translateY(0);
+  color: rgba(214, 178, 112, 0.85);
+}
+.bento-card__live--private .bento-card__dot {
+  background: #d6b270;
+}
+.bento-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lang);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--lang) 70%, transparent);
+  animation: pulseDot 1.8s ease-out infinite;
+}
+@keyframes pulseDot {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--lang) 60%, transparent); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.bento-card__body { margin-top: auto; }
+.bento-card__title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.bento-card__desc {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(233, 236, 242, 0.55);
+  /* Beschreibung erst beim Hover voll sichtbar */
+  max-height: 2.55rem;
+  overflow: hidden;
+  opacity: 0.65;
+  transition: opacity 0.4s ease, max-height 0.5s ease;
+}
+.bento-card:hover .bento-card__desc {
+  opacity: 1;
+  max-height: 6rem;
+}
+
+.bento-card__meta {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.72rem;
+  color: rgba(233, 236, 242, 0.45);
+}
+.bento-card__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(233, 236, 242, 0.7);
+}
+.bento-card__lang-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.bento-card__updated { margin-left: auto; }
+
+/* ============================================================
+   DATA — KPIs & Chart
+   ============================================================ */
+#data {
+  background: linear-gradient(180deg, #08090c 0%, #0a0c11 100%);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+}
+
+.kpi {
+  position: relative;
+  padding: 1.6rem 1.5rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(233, 236, 242, 0.08);
+  background: #0e1016;
+  overflow: hidden;
+}
+.kpi::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #5eead4, transparent);
+}
+.kpi__value {
+  display: block;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #e9ecf2;
+  letter-spacing: -0.02em;
+}
+.kpi__icon {
+  display: block;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.kpi__head {
+  display: block;
+  margin-top: 0.9rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e9ecf2;
+}
+.kpi__label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(233, 236, 242, 0.5);
+}
+
+.data-chart {
+  padding: 2rem;
+  border-radius: 1.3rem;
+  border: 1px solid rgba(233, 236, 242, 0.08);
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(94, 234, 212, 0.06) 0%, transparent 50%),
+    #0e1016;
+}
+.data-chart__head {
+  margin-bottom: 1.6rem;
+}
+.data-chart__title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #e9ecf2;
+}
+.data-chart__sub {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: rgba(233, 236, 242, 0.5);
+}
+.data-chart__canvas {
+  position: relative;
+  height: 300px;
+}
+@media (max-width: 520px) {
+  .data-chart__canvas { height: 260px; }
+}
+
+/* ============================================================
+   KONTAKT-OVERLAY (Blur)
+   ============================================================ */
+.no-scroll {
+  overflow: hidden;
+}
+
+.contact-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.contact-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.contact-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 6, 8, 0.6);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+}
+
+.contact-modal {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  padding: 2.6rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(233, 236, 242, 0.1);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(94, 234, 212, 0.08) 0%, transparent 50%),
+    #0e1016;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  transform: translateY(24px) scale(0.98);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+}
+.contact-overlay.is-open .contact-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+@media (max-width: 520px) {
+  .contact-modal { padding: 1.8rem; }
+}
+
+.contact-modal__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(233, 236, 242, 0.12);
+  background: transparent;
+  color: rgba(233, 236, 242, 0.6);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.contact-modal__close:hover {
+  border-color: #5eead4;
+  color: #5eead4;
+  transform: rotate(90deg);
+}
+
+.contact-modal__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 242, 0.5);
+}
+.contact-modal__title {
+  margin-top: 0.9rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #e9ecf2;
+}
+.contact-modal__sub {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(233, 236, 242, 0.55);
+}
+
+.contact-form {
+  margin-top: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.contact-field label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(233, 236, 242, 0.5);
+}
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(233, 236, 242, 0.12);
+  background: rgba(8, 9, 12, 0.6);
+  color: #e9ecf2;
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: rgba(233, 236, 242, 0.3);
+}
+.contact-field input:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: #5eead4;
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.12);
+}
+
+.contact-submit {
+  margin-top: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.4rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: #5eead4;
+  color: #08090c;
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.contact-submit:hover {
+  background: #99f6e4;
+}
+.contact-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.contact-submit__arrow {
+  transition: transform 0.3s ease;
+}
+.contact-submit:hover .contact-submit__arrow {
+  transform: translateX(3px);
+}
+
+.contact-status {
+  min-height: 1.2rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+.contact-status.is-error { color: #fca5a5; }
+.contact-status.is-success { color: #5eead4; }
+.contact-status.is-pending { color: rgba(233, 236, 242, 0.5); }
+
+/* ============================================================
+   Reduced Motion — Accessibility
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow,
+  .hero-sub,
+  .hero-actions,
+  .hero-scroll {
+    opacity: 1 !important;
+  }
+  .hero-headline .word {
+    transform: none !important;
+  }
+  .hero-scroll {
+    animation: none;
+  }
+}
