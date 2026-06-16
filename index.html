@@ -1,34 +1,39 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Youssef Fathi — Data Analyst. Data. Insight. Strategy." />
+  <meta name="description" content="Youssef Fathi — Data Analyst aus Berlin. Ich verwandle rohe Daten in klare Entscheidungen." />
+  <meta property="og:title" content="Youssef Fathi — Data Analyst" />
+  <meta property="og:description" content="Data. Insight. Strategy. Portfolio von Youssef Fathi." />
+  <meta property="og:type" content="website" />
   <title>Youssef Fathi — Data Analyst</title>
 
-  <!-- Fonts: Space Grotesk (Display) + Inter (Body) -->
+  <!-- Fonts: Space Grotesk (Display) · Inter (Body) · Instrument Serif (Akzent) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
-  <!-- Tailwind (Play CDN — für Produktion später per Build ersetzen) -->
+  <!-- Tailwind (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            ink: '#08090c',          // Deep Dark Base
+            ink: '#08090c',
             'ink-soft': '#0e1016',
-            mist: '#e9ecf2',         // Vordergrund / Text
-            accent: '#5eead4',       // Teal — "Data" Akzent
+            mist: '#e9ecf2',
+            accent: '#5eead4',
             'accent-bright': '#99f6e4',
+            gold: '#d6b270',
           },
           fontFamily: {
             display: ['"Space Grotesk"', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'serif'],
             sans: ['Inter', 'sans-serif'],
           },
         },
@@ -39,23 +44,42 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-ink text-mist antialiased selection:bg-accent/30">
-  <!-- ░░ Grain / Noise Overlay ░░ -->
+
+  <!-- ░░ PRELOADER ░░ -->
+  <div id="preloader" class="preloader">
+    <div class="preloader__inner">
+      <span class="preloader__label">Youssef Fathi</span>
+      <span class="preloader__role">Data Analyst</span>
+    </div>
+    <div class="preloader__count"><span id="preloader-num">0</span><span class="preloader__pct">%</span></div>
+    <div class="preloader__bar"><span id="preloader-fill"></span></div>
+  </div>
+
+  <!-- ░░ Custom Cursor ░░ -->
+  <div id="cursor" class="cursor" aria-hidden="true"></div>
+  <div id="cursor-ring" class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- ░░ Scroll-Fortschritt ░░ -->
+  <div class="scroll-progress"><span id="scroll-progress-fill"></span></div>
+
+  <!-- ░░ Grain ░░ -->
   <div class="grain" aria-hidden="true"></div>
 
   <!-- ░░ Navigation ░░ -->
-  <header class="fixed top-0 inset-x-0 z-40">
+  <header id="site-header" class="site-header">
     <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
-      <a href="#" class="nav-logo font-display text-sm font-semibold tracking-widest uppercase">
-        YF<span class="text-accent">.</span>
+      <a href="#hero" class="nav-logo font-display text-sm font-semibold tracking-widest uppercase" data-cursor="link">
+        Youssef Fathi<span class="text-accent">.</span>
       </a>
       <ul class="hidden gap-10 text-xs uppercase tracking-[0.2em] text-mist/60 md:flex">
-        <li><a class="nav-link" href="#work">Work</a></li>
-        <li><a class="nav-link" href="#data">Data</a></li>
-        <li><a class="nav-link" href="#about">About</a></li>
+        <li><a class="nav-link" href="#work" data-cursor="link">Work</a></li>
+        <li><a class="nav-link" href="#data" data-cursor="link">Skills</a></li>
+        <li><a class="nav-link" href="#about" data-cursor="link">About</a></li>
       </ul>
       <button
         data-open-contact
-        class="nav-cta rounded-full border border-mist/20 px-5 py-2 text-xs uppercase tracking-[0.2em] text-mist transition hover:border-accent hover:text-accent"
+        data-cursor="link"
+        class="nav-cta magnetic rounded-full border border-mist/20 px-5 py-2 text-xs uppercase tracking-[0.2em] text-mist"
       >
         Contact
       </button>
@@ -64,133 +88,122 @@
 
   <!-- ░░ HERO ░░ -->
   <section id="hero" class="relative flex min-h-screen items-center overflow-hidden">
-    <!-- Generatives Partikel-Hintergrundsystem -->
     <canvas id="particle-canvas"></canvas>
-    <!-- Radialer Glow / Vignette -->
     <div class="hero-glow" aria-hidden="true"></div>
 
     <div class="hero-inner mx-auto w-full max-w-7xl px-6 md:px-10">
       <p class="hero-eyebrow mb-8 flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-mist/50">
         <span class="inline-block h-px w-10 bg-accent"></span>
-        Youssef Fathi — Data Analyst
+        Youssef Fathi · Data Analyst · Berlin
       </p>
 
-      <h1 class="hero-headline font-display font-bold leading-[0.95] tracking-tight">
+      <h1 class="hero-headline font-display font-bold leading-[0.9] tracking-tight">
         <span class="line"><span class="word">Data.</span></span>
-        <span class="line"><span class="word text-mist/40">Insight.</span></span>
-        <span class="line"><span class="word text-accent">Strategy.</span></span>
+        <span class="line"><span class="word word--serif">Insight.</span></span>
+        <span class="line"><span class="word word--outline">Strategy.</span></span>
       </h1>
 
       <p class="hero-sub mt-10 max-w-xl text-base font-light leading-relaxed text-mist/60 md:text-lg">
         Ich verwandle rohe Datenmengen in klare Entscheidungen — durch präzise
-        Analyse, Visualisierung und Strategie, die Wirkung zeigt.
+        Analyse, Visualisierung und Strategie, die <em class="font-serif italic text-mist">Wirkung</em> zeigt.
       </p>
 
       <div class="hero-actions mt-12 flex flex-wrap items-center gap-5">
-        <a
-          href="#work"
-          class="group inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-ink transition hover:bg-accent-bright"
-        >
+        <a href="#work" data-cursor="link"
+          class="cta-primary magnetic group inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-ink">
           Projekte ansehen
           <span class="transition-transform group-hover:translate-x-1">→</span>
         </a>
-        <button
-          data-open-contact
-          class="inline-flex items-center gap-3 text-sm font-medium text-mist/70 transition hover:text-mist"
-        >
+        <button data-open-contact data-cursor="link"
+          class="inline-flex items-center gap-3 text-sm font-medium text-mist/70 transition hover:text-mist">
           <span class="h-2 w-2 animate-pulse rounded-full bg-accent"></span>
           Verfügbar für Projekte
         </button>
       </div>
     </div>
 
-    <!-- Scroll Indicator -->
     <div class="hero-scroll absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.3em] text-mist/40">
       Scroll
     </div>
   </section>
 
-  <!-- ░░ WORK / Projects — live aus GitHub ░░ -->
-  <section id="work" class="relative px-6 py-32 md:px-10">
+  <!-- ░░ KINETIC MARQUEE ░░ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marquee-track">
+      <span class="marquee__item">Data Analysis <i>✦</i> Visualization <i>✦</i> Machine Learning <i>✦</i> Python <i>✦</i> SQL <i>✦</i> Power BI <i>✦</i> Automation <i>✦</i></span>
+      <span class="marquee__item">Data Analysis <i>✦</i> Visualization <i>✦</i> Machine Learning <i>✦</i> Python <i>✦</i> SQL <i>✦</i> Power BI <i>✦</i> Automation <i>✦</i></span>
+    </div>
+  </div>
+
+  <!-- ░░ WORK / Projects ░░ -->
+  <section id="work" class="section relative px-6 py-32 md:px-10">
     <div class="mx-auto max-w-7xl">
-      <header class="mb-14 flex flex-wrap items-end justify-between gap-6">
+      <header class="mb-16 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p class="flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-mist/50">
-            <span class="inline-block h-px w-10 bg-accent"></span>
-            Selected Work
+          <p class="section-eyebrow" data-reveal>
+            <span class="section-index">01</span> Ausgewählte Arbeiten
           </p>
-          <h2 class="mt-5 font-display text-4xl font-semibold tracking-tight md:text-6xl">
-            Projekte<span class="text-accent">.</span>
+          <h2 class="section-title mt-5" data-reveal>
+            Projekte, die <em>Wirkung</em> zeigen.
           </h2>
         </div>
-        <a
-          id="github-profile-link"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          class="group inline-flex items-center gap-2 text-sm text-mist/60 transition hover:text-accent"
-        >
+        <a id="github-profile-link" href="#" target="_blank" rel="noopener" data-cursor="link" data-reveal
+          class="group inline-flex items-center gap-2 text-sm text-mist/60 transition hover:text-accent">
           <span class="h-2 w-2 animate-pulse rounded-full bg-accent"></span>
           Alle Repos auf GitHub
           <span class="transition-transform group-hover:translate-x-1">→</span>
         </a>
       </header>
 
-      <!-- Cards werden per JS injiziert -->
       <div id="bento-grid" class="bento-grid">
         <div class="bento-loading">Lade Repositories …</div>
       </div>
     </div>
   </section>
 
-  <!-- ░░ DATA — Live-Visualisierung ░░ -->
-  <section id="data" class="relative px-6 py-32 md:px-10">
+  <!-- ░░ DATA / Skills ░░ -->
+  <section id="data" class="section relative px-6 py-32 md:px-10">
     <div class="mx-auto max-w-7xl">
-      <header class="mb-14">
-        <p class="flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-mist/50">
-          <span class="inline-block h-px w-10 bg-accent"></span>
-          Skills &amp; Tools
+      <header class="mb-16 max-w-3xl">
+        <p class="section-eyebrow" data-reveal>
+          <span class="section-index">02</span> Skills &amp; Tools
         </p>
-        <h2 class="mt-5 max-w-3xl font-display text-4xl font-semibold tracking-tight md:text-6xl">
-          Mein Werkzeug&shy;kasten<span class="text-accent">.</span>
+        <h2 class="section-title mt-5" data-reveal>
+          Das <em>Werkzeug</em> hinter den Insights.
         </h2>
-        <p class="mt-6 max-w-2xl text-base font-light leading-relaxed text-mist/60">
+        <p class="section-lead mt-6" data-reveal>
           Von der Datenaufbereitung bis zur Visualisierung — die Werkzeuge und
           Kompetenzen, mit denen ich Daten in verständliche Insights verwandle.
         </p>
       </header>
 
-      <!-- Kompetenzfelder -->
       <div class="kpi-grid">
-        <div class="kpi">
+        <div class="kpi" data-reveal>
           <span class="kpi__icon">📊</span>
           <span class="kpi__head">Datenanalyse</span>
           <span class="kpi__label">Explorative Analyse, Statistik &amp; Hypothesentests</span>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-reveal>
           <span class="kpi__icon">📈</span>
           <span class="kpi__head">Visualisierung</span>
           <span class="kpi__label">Power BI, Dashboards &amp; Data Storytelling</span>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-reveal>
           <span class="kpi__icon">🤖</span>
           <span class="kpi__head">Machine Learning</span>
           <span class="kpi__label">scikit-learn, Klassifikation &amp; Prognosen</span>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-reveal>
           <span class="kpi__icon">⚙️</span>
           <span class="kpi__head">Automatisierung</span>
-          <span class="kpi__label">Python, ETL-Pipelines &amp; Workflows (n8n)</span>
+          <span class="kpi__label">Python, ETL-Pipelines &amp; Workflows</span>
         </div>
       </div>
 
-      <!-- Chart: Skill-Vertrautheit -->
-      <div class="data-chart">
+      <div class="data-chart" data-reveal>
         <div class="data-chart__head">
           <h3 class="data-chart__title">Vertrautheit mit Tools</h3>
-          <p class="data-chart__sub">
-            Selbsteinschätzung — Erfahrung &amp; Sicherheit im Einsatz (in %)
-          </p>
+          <p class="data-chart__sub">Selbsteinschätzung — Erfahrung &amp; Sicherheit im Einsatz (in %)</p>
         </div>
         <div class="data-chart__canvas">
           <canvas id="feature-chart"></canvas>
@@ -199,11 +212,88 @@
     </div>
   </section>
 
+  <!-- ░░ ABOUT ░░ -->
+  <section id="about" class="section relative px-6 py-32 md:px-10">
+    <div class="mx-auto grid max-w-7xl gap-14 md:grid-cols-[1.1fr_0.9fr] md:gap-20">
+      <div>
+        <p class="section-eyebrow" data-reveal>
+          <span class="section-index">03</span> Über mich
+        </p>
+        <h2 class="section-title mt-5" data-reveal>
+          Ich finde <em>Muster</em>, wo andere nur Zahlen sehen.
+        </h2>
+        <p class="section-lead mt-8" data-reveal>
+          Als Data Analyst verbinde ich analytische Präzision mit dem Blick für die
+          Geschichte hinter den Daten. Von der ersten rohen Tabelle bis zum fertigen
+          Dashboard begleite ich den kompletten Weg — sauber aufbereitet, statistisch
+          fundiert und verständlich erzählt.
+        </p>
+        <p class="mt-5 text-mist/55 leading-relaxed" data-reveal>
+          Mein Fokus liegt auf Daten- und Prozessanalyse: Ich automatisiere Pipelines,
+          baue Prognosemodelle und übersetze komplexe Ergebnisse in Entscheidungen,
+          mit denen Teams wirklich arbeiten können.
+        </p>
+      </div>
+
+      <div class="about-facts">
+        <div class="about-fact" data-reveal>
+          <span class="about-fact__k">Fokus</span>
+          <span class="about-fact__v">Daten- &amp; Prozessanalyse</span>
+        </div>
+        <div class="about-fact" data-reveal>
+          <span class="about-fact__k">Stack</span>
+          <span class="about-fact__v">Python · SQL · Power BI · scikit-learn</span>
+        </div>
+        <div class="about-fact" data-reveal>
+          <span class="about-fact__k">Standort</span>
+          <span class="about-fact__v">Berlin, Deutschland</span>
+        </div>
+        <div class="about-fact" data-reveal>
+          <span class="about-fact__k">Status</span>
+          <span class="about-fact__v"><span class="dot-live"></span> Offen für Projekte</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CONTACT CTA ░░ -->
+  <section id="contact" class="cta-section relative px-6 py-40 md:px-10">
+    <div class="cta-glow" aria-hidden="true"></div>
+    <div class="mx-auto max-w-7xl text-center">
+      <p class="section-eyebrow justify-center" data-reveal>Let's talk</p>
+      <h2 class="cta-title mt-6" data-reveal>
+        Lass uns etwas<br /><em>Messbares</em> bauen.
+      </h2>
+      <div class="mt-14 flex flex-col items-center gap-8" data-reveal>
+        <button data-open-contact data-cursor="link" class="cta-circle magnetic">
+          <span>Say&nbsp;Hello</span>
+        </button>
+        <a href="mailto:jose.fathi@gmail.com" data-cursor="link"
+          class="text-sm text-mist/50 underline-offset-4 transition hover:text-accent hover:underline">
+          jose.fathi@gmail.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer px-6 md:px-10">
+    <div class="mx-auto flex max-w-7xl flex-col gap-6 border-t border-mist/10 py-10 md:flex-row md:items-center md:justify-between">
+      <span class="font-display text-sm tracking-widest uppercase">Youssef Fathi<span class="text-accent">.</span></span>
+      <div class="flex gap-7 text-xs uppercase tracking-[0.2em] text-mist/50">
+        <a href="https://github.com/Barrowow" target="_blank" rel="noopener" data-cursor="link" class="nav-link">GitHub</a>
+        <a href="mailto:jose.fathi@gmail.com" data-cursor="link" class="nav-link">E-Mail</a>
+        <a href="#hero" data-cursor="link" class="nav-link">Nach oben ↑</a>
+      </div>
+      <span class="text-xs text-mist/30">© <span id="year"></span> · Designed &amp; built with care</span>
+    </div>
+  </footer>
+
   <!-- ░░ KONTAKT-OVERLAY (Blur) ░░ -->
   <div id="contact-overlay" class="contact-overlay" aria-hidden="true">
     <div class="contact-overlay__backdrop" data-close-contact></div>
     <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-      <button class="contact-modal__close" data-close-contact aria-label="Schließen">✕</button>
+      <button class="contact-modal__close" data-close-contact aria-label="Schließen" data-cursor="link">✕</button>
       <p class="contact-modal__eyebrow">
         <span class="inline-block h-px w-8 bg-accent align-middle"></span>
         Kontakt
@@ -226,7 +316,7 @@
           <label for="cf-message">Nachricht</label>
           <textarea id="cf-message" name="message" rows="4" required placeholder="Worum geht es?"></textarea>
         </div>
-        <button type="submit" class="contact-submit">
+        <button type="submit" class="contact-submit magnetic" data-cursor="link">
           <span class="contact-submit__label">Nachricht senden</span>
           <span class="contact-submit__arrow">→</span>
         </button>
@@ -237,6 +327,8 @@
 
   <!-- ░░ Scripts ░░ -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="js/particles.js"></script>
   <script src="js/projects.js"></script>
