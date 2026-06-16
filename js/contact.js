@@ -7,7 +7,7 @@
      eintragen → Key kommt per Mail. Funktioniert auf GitHub Pages,
      ohne Server. Mails landen bei jose.fathi@gmail.com.
    ============================================================ */
-const WEB3FORMS_ACCESS_KEY = "DEIN-ACCESS-KEY";
+const WEB3FORMS_ACCESS_KEY = "fe816af5-76d5-4043-a0da-5076943e807e";
 
 (function () {
   const overlay = document.getElementById("contact-overlay");
